@@ -7,6 +7,8 @@ import process from 'process';
 dotenv.config();
 
 const app = express();
+import authRoutes from './routes/authRoutes';
+app.use('/api', authRoutes);
 
 // Middleware
 app.use(cors());
