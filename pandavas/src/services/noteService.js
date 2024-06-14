@@ -23,9 +23,11 @@ const deleteNote = async (id) => {
   return response.data;
 };
 
-export default {
+const noteService = {
     createNote,
     getNotes,
     updateNote,
     deleteNote
 };
+
+export default noteService;

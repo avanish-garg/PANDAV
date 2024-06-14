@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
+import QuillEditor from './components/QuillEditor'; // Import the QuillEditor component
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Assuming your Socket.IO server is running on this URL
@@ -40,6 +41,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/editor" element={<QuillEditor />} /> {/* New route for the QuillEditor */}
         <Route path="/" element={<Login />} />
       </Routes>
     </Router>
