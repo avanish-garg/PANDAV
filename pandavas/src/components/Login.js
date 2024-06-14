@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
+import axios from 'axios'; // Import axios for making HTTP requests
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
+    try {
+      // BACKEND_ENDPOINT the actual URL of backend
+      const response = await axios.post('REACT_APP_BACKEND_URL/login', {
+        email,
+        password,
+      });
+      console.log('Login successful', response.data);
+      // Here you can handle redirection or local storage/token storage etc.
+    } catch (error) {
+      console.error('Login failed', error.response ? error.response.data : 'No response');
+      // Handle error (e.g., show error message)
+    }
   };
 
   return (
