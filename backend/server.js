@@ -5,14 +5,15 @@ import dotenv from 'dotenv';
 import http from 'http';
 import { Server } from 'socket.io';
 import process from 'process';
+// Import routes
+import authRoutes from './routes/authRoutes';
+// Import the Document model
+import Document from './models/Document'; // Ensure this path is correct
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app); // Create HTTP server for socket.io
-
-// Import routes
-import authRoutes from './routes/authRoutes';
 
 // Middleware
 app.use(cors());
@@ -37,35 +38,47 @@ const io = new Server(server, {
 // Socket.io event handlers
 io.on('connection', (socket) => {
   console.log('New client connected');
-
-  // Handle joining a specific document room
-  socket.on('joinDocument', (documentId) => {
-    socket.join(documentId);
-    console.log(`User joined document: ${documentId}`);
-    // Notify others in the room that a new user has joined
-    socket.to(documentId).emit('userJoined', { userId: socket.id, documentId });
-  });
-
-  // Handle document changes
-  socket.on('documentChange', (data) => {
-    const { documentId, content } = data;
-    // Broadcast changes to all clients in the same document room, except the sender
-    socket.to(documentId).emit('documentUpdate', { documentId, content });
-  });
-
-  // Handle leaving a document room
-  socket.on('leaveDocument', (documentId) => {
-    socket.leave(documentId);
-    console.log(`User left document: ${documentId}`);
-    // Notify others in the room that a user has left
-    socket.to(documentId).emit('userLeft', { userId: socket.id, documentId });
-  });
-
-  // Handle disconnection
   socket.on('disconnect', () => {
     console.log('Client disconnected');
-    // Optionally, handle cleanup, such as notifying other users, saving state, etc.
   });
+  // Additional event handlers can be added here
+});
+
+// POST endpoint for creating a new document
+app.post('/documents', async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const document = new Document({ title, content });
+    await document.save();
+    io.emit('documentCreated', document); // Emit an event for the new document
+    res.status(201).json(document);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// GET endpoint for retrieving all documents
+app.get('/documents', async (req, res) => {
+  try {
+    const documents = await Document.find();
+    res.status(200).json(documents);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+});
+
+// GET endpoint for retrieving a specific document by id
+app.get('/documents/:id', async (req, res) => {
+  try {
+    const document = await Document.findById(req.params.id);
+    if (!document) {
+      res.status(404).json({ message: 'Document not found' });
+    } else {
+      res.status(200).json(document);
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 const PORT = process.env.PORT || 5000;
