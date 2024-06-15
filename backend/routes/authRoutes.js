@@ -1,5 +1,5 @@
 import express from 'express';
-import User from '../models/User'; // Corrected the file name to match the actual file name
+import User from '../models/User.js'; // Corrected the file name to match the actual file name
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import process from 'process';

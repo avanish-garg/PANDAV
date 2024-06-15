@@ -6,9 +6,9 @@ import http from 'http';
 import { Server } from 'socket.io';
 import process from 'process';
 // Import routes
-import authRoutes from './routes/authRoutes';
+import authRoutes from './routes/authRoutes.js';
 // Import the Document model
-import Document from './models/Document'; // Ensure this path is correct
+import Document from './models/Document.js'; // Ensure this path is correct
 
 dotenv.config();
 
