@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 function Signup() {
   const [email, setEmail] = useState('');
@@ -36,6 +37,10 @@ function Signup() {
           Register
         </Button>
       </Form>
+
+      <div className="mt-3">
+        <p>Already have an account? <Link to="/login">Login</Link></p> {/* Add the login button with Link */}
+      </div>
     </Container>
   );
 }
