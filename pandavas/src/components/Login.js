@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Updated import to useNavigate
+import { useNavigate } from 'react-router-dom';
 import { Container, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Updated to use useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,9 +17,9 @@ function Login() {
       });
       console.log('Login successful', response.data);
       if (response.data.isRegistered) {
-        navigate('/dashboard'); // Updated to use navigate
+        navigate('/DocumentEditorPage'); // Navigate to /DocumentEditorPage route upon successful login
       } else {
-        navigate('/signup'); // Updated to use navigate
+        navigate('/signup');
       }
     } catch (error) {
       console.error('Login failed', error.response ? error.response.data : 'No response');
@@ -27,7 +27,7 @@ function Login() {
   };
 
   const handleSignupClick = () => {
-    navigate('/signup'); // Updated to use navigate
+    navigate('/signup');
   };
 
   return (
