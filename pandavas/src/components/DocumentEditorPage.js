@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill'; // Import ReactQuill
 import 'react-quill/dist/quill.snow.css'; // Import ReactQuill styles
+import './DocumentEditorPage.css'; // Import CSS for styling
 
 function DocumentEditorPage() {
   const [document, setDocument] = useState({ title: '', content: '' });
@@ -20,11 +21,15 @@ function DocumentEditorPage() {
     setDocument({ ...document, content });
   };
 
+  const handleNewDocument = () => {
+    setDocument({ title: '', content: '' });
+  };
+
   return (
-    <div>
+    <div className="document-editor-page">
       <h2>Document Editor</h2>
       <input type="file" onChange={handleFileUpload} />
-      <button onClick={() => setDocument({ title: '', content: '' })}>New Document</button>
+      <button onClick={handleNewDocument}>New Document</button>
       <ReactQuill value={document.content} onChange={handleContentChange} />
     </div>
   );

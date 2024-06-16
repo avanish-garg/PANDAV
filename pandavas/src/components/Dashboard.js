@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Container, Button } from 'react-bootstrap';
+import './Dashboard.css'; // Import custom CSS for styling
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -39,10 +41,14 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={uploadDocument}>Upload and Edit Document</button>
+    <div className="dashboard-bg">
+      <Container>
+        <div className="dashboard-container">
+          <h1>Dashboard</h1>
+          <input type="file" onChange={handleFileChange} />
+          <Button className="upload-button" onClick={uploadDocument}>Upload and Edit Document</Button>
+        </div>
+      </Container>
     </div>
   );
 };
