@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const DocumentSchema = new mongoose.Schema({
   title: String,
-  content: String,
+  content: String, // This could be the text content or description of the file
+  filePath: String, // New field to store the path of the uploaded file
   createdAt: {
     type: Date,
     default: Date.now,
@@ -20,6 +21,12 @@ const DocumentSchema = new mongoose.Schema({
 // Middleware to set updatedAt on document update
 DocumentSchema.pre('save', function(next) {
   this.updatedAt = new Date();
+  next();
+});
+
+// Middleware for findOneAndUpdate
+DocumentSchema.pre('findOneAndUpdate', function(next) {
+  this.set({ updatedAt: new Date() });
   next();
 });
 

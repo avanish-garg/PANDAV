@@ -1,31 +1,34 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // State to store error messages
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+  
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
         email,
         password,
       });
       console.log('Login successful', response.data);
-      if (response.data.isRegistered) {
-        navigate('/DocumentEditorPage'); // Navigate to /DocumentEditorPage route upon successful login
-      } else {
-        navigate('/signup');
-      }
+      // Directly navigate to the dashboard after a successful login
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login failed', error.response ? error.response.data : 'No response');
+      setError(error.response ? error.response.data.message : 'Login failed with no response');
     }
   };
-
   const handleSignupClick = () => {
     navigate('/signup');
   };
@@ -33,6 +36,7 @@ function Login() {
   return (
     <Container className="mt-5">
       <h2>Login</h2>
+      {error && <Alert variant="danger">{error}</Alert>} {/* Display error message */}
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>

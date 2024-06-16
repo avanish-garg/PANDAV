@@ -5,15 +5,36 @@ import dotenv from 'dotenv';
 import http from 'http';
 import { Server } from 'socket.io';
 import process from 'process';
-// Import routes
+import multer from 'multer'; // Import multer
 import authRoutes from './routes/authRoutes.js';
-// Import the Document model
+import documentRoutes from './routes/documentRoutes.js'; // Import document routes
 import Document from './models/Document.js'; // Ensure this path is correct
+import fs from 'fs';
+import path from 'path';
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app); // Create HTTP server for socket.io
+
+// Set up storage for file uploads
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, 'uploads/'); // Make sure this folder exists
+  },
+  filename: function(req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 // Middleware
 app.use(cors());
@@ -21,6 +42,7 @@ app.use(express.json()); // for parsing application/json
 
 // Use routes
 app.use('/api', authRoutes);
+app.use('/api', documentRoutes); // Use document routes
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -78,6 +100,30 @@ app.get('/documents/:id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// File upload endpoint
+app.post('/upload', upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  // Here you can generate a unique ID if needed, but MongoDB's _id can also serve this purpose
+  // Save file metadata in MongoDB
+  const newDocument = new Document({
+    title: req.body.title, // Assuming you want to include a title
+    content: req.file.path, // Save the file path as content or add a new field for the path
+    // Add other metadata as needed
+  });
+
+  try {
+    await newDocument.save();
+    // You can return the MongoDB _id as the unique ID
+    res.status(201).json({ documentId: newDocument._id, filePath: req.file.path });
+  } catch (error) {
+    console.error('Error saving document:', error);
+    res.status(500).send('Error saving document.');
   }
 });
 
