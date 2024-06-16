@@ -1,0 +1,35 @@
+/* DocumentEditorPage.css */
+
+.document-editor-page {
+    background-color: #051267; /* Light gray background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .document-editor-page h2 {
+    color: #185a9d; /* Heading color */
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .document-editor-page input[type="file"] {
+    margin-bottom: 10px;
+  }
+  
+  .document-editor-page button {
+    margin-bottom: 10px;
+    background-color: #185a9d; /* Button background color */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .document-editor-page button:hover {
+    background-color: #0c3e6e; /* Darker shade on hover */
+  }
+  
