@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -16,10 +16,10 @@ const Dashboard = () => {
     }
 
     const formData = new FormData();
-    formData.append('file', file); // Ensure the key matches the server expectation
+    formData.append('file', file);  // Ensure 'file' matches the key in server
 
     try {
-      const response = await fetch('http://localhost:5000/upload', { // Correct URL
+      const response = await fetch('http://localhost:5000/upload', {
         method: 'POST',
         body: formData,
       });
@@ -28,7 +28,7 @@ const Dashboard = () => {
       }
       const data = await response.json();
       if (data.documentId) {
-        navigateToDocumentEditor(data.documentId);
+        navigate(`/edit-document/${data.documentId}`);
       } else {
         alert('Failed to upload document.');
       }
@@ -36,10 +36,6 @@ const Dashboard = () => {
       console.error('Error uploading document:', error);
       alert('Error uploading document.');
     }
-  };
-
-  const navigateToDocumentEditor = (documentId) => {
-    navigate(`/edit-document/${documentId}`);
   };
 
   return (

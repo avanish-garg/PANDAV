@@ -11,6 +11,7 @@ import documentRoutes from './routes/documentRoutes.js'; // Import document rout
 import Document from './models/Document.js'; // Ensure this path is correct
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -30,8 +31,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Ensure uploads directory exists
+// Convert the import.meta.url to a file path
+const __filename = fileURLToPath(import.meta.url);
+
+// Derive the directory name
+const __dirname = path.dirname(__filename);
+
+// Now you can use __dirname to define uploadsDir
 const uploadsDir = path.join(__dirname, 'uploads');
+
+// Ensure uploads directory exists
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }

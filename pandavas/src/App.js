@@ -10,7 +10,7 @@ import ProfilePage from './components/ProfilePage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Assuming your Socket.IO server is running on this URL
-const SOCKET_URL = 'http://localhost:4000';
+const SOCKET_URL = 'http://localhost:5000';
 
 function App() {
   useEffect(() => {
